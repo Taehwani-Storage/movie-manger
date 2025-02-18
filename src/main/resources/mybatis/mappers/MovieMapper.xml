@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mappers.MovieMapper">
+
+    <!-- 영화 목록 페이지 조회 -->
+    <select id="selectByPage" resultType="movie">
+        SELECT * FROM movie.movies
+        ORDER BY id DESC
+            LIMIT #{limitSize}
+        OFFSET #{startRow};
+    </select>
+
+    <!-- 전체 영화 조회 -->
+    <select id="getAllMovies" resultType="movie">
+        SELECT * FROM movie.movies;
+    </select>
+
+    <!-- 개별 영화 조회 -->
+    <select id="getOneMovie" parameterType="int" resultType="movie">
+        SELECT * FROM movie.movies WHERE id = #{id};
+    </select>
+
+    <!-- 영화 개수 카운트 -->
+    <select id="selectMaxPage" resultType="int">
+        SELECT COUNT(*) FROM movie.movies;
+    </select>
+
+    <!-- 영화 등록 -->
+    <insert id="addMovie" parameterType="movie">
+        INSERT INTO movie.movies (title, director, synopsis, running_time)
+        VALUES (#{title}, #{director}, #{synopsis}, #{runningTime});
+    </insert>
+
+    <!-- 영화 수정 -->
+    <update id="updateMovie" parameterType="movie">
+        UPDATE movie.movies
+        SET title        = #{title},
+            director     = #{director},
+            synopsis     = #{synopsis},
+            running_time = #{runningTime}
+        WHERE id = #{id};
+    </update>
+
+    <!-- 영화 평점 수정   -->
+    <update id="updateScore" parameterType="int">
+        UPDATE movie.movies SET score = #{score}
+        WHERE id = #{id};
+    </update>
+
+    <!-- 영화 삭제 -->
+    <delete id="deleteMovie" parameterType="int">
+        DELETE FROM movie.movies WHERE id = #{id};
+    </delete>
+
+</mapper>

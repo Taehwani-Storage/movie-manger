@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mappers.TheaterMapper">
+
+    <!-- 극장 목록 페이지 조회 -->
+    <select id="selectByPage" resultType="theater">
+        SELECT * FROM movie.theaters
+        ORDER BY id DESC
+            LIMIT #{limitSize}
+        OFFSET #{startRow};
+    </select>
+
+    <!-- 전체 극장 조회 -->
+    <select id="getAllTheaters" resultType="theater">
+        SELECT * FROM movie.theaters;
+    </select>
+
+    <!-- 개별 극장 조회 -->
+    <select id="getOneTheater" parameterType="int" resultType="theater">
+        SELECT * FROM movie.theaters WHERE id = #{id};
+    </select>
+
+    <!-- 극장 개수 카운트 -->
+    <select id="selectMaxPage" resultType="int">
+        SELECT COUNT(*) FROM movie.theaters;
+    </select>
+
+    <!-- 극장 등록 -->
+    <insert id="addTheater" parameterType="theater">
+        INSERT INTO movie.theaters (name, address, phone)
+        VALUES (#{name}, #{address}, #{phone});
+    </insert>
+
+    <!-- 극장 수정 -->
+    <update id="updateTheater" parameterType="theater">
+        UPDATE movie.theaters
+        SET name      = #{name},
+            address   = #{address},
+            phone     = #{phone}
+        WHERE id = #{id};
+    </update>
+
+    <!-- 극장 삭제 -->
+    <delete id="deleteTheater" parameterType="int">
+        DELETE FROM movie.theaters WHERE id = #{id};
+    </delete>
+
+</mapper>
