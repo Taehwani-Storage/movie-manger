@@ -6,8 +6,7 @@ import lombok.Data;
 public class Rating {
     private int id;
     private int ratingNo;
-    private User user;
-    private Movie movie;
-    private int score;
+    private int movieId;
+    private int userId;
     private String review;
 }

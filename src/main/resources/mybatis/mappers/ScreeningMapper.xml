@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mappers.ScreeningMapper">
+
+    <!-- 극장 목록 페이지 조회 -->
+    <select id="selectByPage" resultType="screening">
+        SELECT * FROM movie.screenings
+        ORDER BY id DESC
+            LIMIT #{limitSize}
+        OFFSET #{startRow};
+    </select>
+
+    <!-- 전체 극장 조회 -->
+    <select id="getAllScreenings" resultType="screening">
+        SELECT * FROM movie.screenings;
+    </select>
+
+    <!-- 개별 극장 조회 -->
+    <select id="getOneScreening" parameterType="int" resultType="screening">
+        SELECT * FROM movie.screenings WHERE id = #{id};
+    </select>
+
+    <!-- 극장 개수 카운트 -->
+    <select id="selectMaxPage" resultType="int">
+        SELECT COUNT(*) FROM movie.screenings;
+    </select>
+
+<!--    &lt;!&ndash; 극장 등록 &ndash;&gt;-->
+<!--    <insert id="addScreening" parameterType="screening">-->
+<!--        INSERT INTO movie.screenings (name, address, phone)-->
+<!--        VALUES (#{name}, #{address}, #{phone});-->
+<!--    </insert>-->
+
+<!--    &lt;!&ndash; 극장 수정 &ndash;&gt;-->
+<!--    <update id="updateScreening" parameterType="screening">-->
+<!--        UPDATE movie.screenings-->
+<!--        SET name      = #{name},-->
+<!--            address   = #{address},-->
+<!--            phone     = #{phone}-->
+<!--        WHERE id = #{id};-->
+<!--    </update>-->
+
+    <!-- 극장 삭제 -->
+    <delete id="deleteScreening" parameterType="int">
+        DELETE FROM movie.screenings WHERE id = #{id};
+    </delete>
+
+</mapper>

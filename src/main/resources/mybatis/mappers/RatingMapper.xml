@@ -1,24 +1,49 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="mappers.RatingMapper">
-
-    <!-- 평점 추가 -->
-    <!--<insert id="addRating">
-        INSERT INTO ratings (movie_id, user_id, score)
-        VALUES (#{movieId}, #{userId}, #{score})
-    </insert>-->
-
-    <!-- 특정 영화의 평점 목록 조회 -->
-    <select id="getRatingsByMovie" resultType="com.bit.cinema_manager.entity.Rating">
-        SELECT * FROM ratings WHERE movie_id = #{movieId}
+    <!-- 평점 목록 페이지 조회 -->
+    <select id="selectByPage" resultType="rating">
+        SELECT * FROM movie.ratings
+        ORDER BY id DESC
+            LIMIT #{limitSize}
+        OFFSET #{startRow};
     </select>
 
-    <!-- 특정 영화의 평점 업데이트 -->
-    <update id="updateMovieScore">
-        UPDATE movies SET score = #{score} WHERE id = #{movieId}
+    <!-- 전체 평점 조회 -->
+    <select id="getAllRatings" resultType="rating">
+        SELECT * FROM movie.ratings;
+    </select>
+
+    <!-- 개별 평점 조회 -->
+    <select id="getOnerating" parameterType="int" resultType="rating">
+        SELECT * FROM movie.ratings WHERE id = #{id};
+    </select>
+
+    <!-- 평점 개수 카운트 -->
+    <select id="selectMaxPage" resultType="int">
+        SELECT COUNT(*) FROM movie.ratings;
+    </select>
+
+    <!-- 영화 평점 업데이트 (입력된 모든 평점의 평균값 반영) -->
+    <update id="updateMovieScore" parameterType="map">
+        UPDATE movie.movies
+        SET score = COALESCE(
+                FLOOR((SELECT SUM(rating)
+                       FROM rating
+                       WHERE movie_id = #{movieId}) /
+                                           NULLIF((
+                                           SELECT COUNT(*) FROM rating WHERE movie_id = #{movieId}),
+                                                  0)), 0)
+        WHERE movie_id = #{movieId}
     </update>
 
+    <!-- 사용자의 평론 추가 또는 수정 -->
+    <update id="updateReview" parameterType="map">
+        UPDATE rating
+        SET review = #{review}
+        WHERE movie_id = #{movieId} AND user_id = #{userId}
+    </update>
 </mapper>

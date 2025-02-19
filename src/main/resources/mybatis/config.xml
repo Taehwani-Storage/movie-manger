@@ -12,7 +12,7 @@
         <typeAlias type="com.bit.cinema_manager.model.User" alias="user"/>
         <typeAlias type="com.bit.cinema_manager.model.Movie" alias="movie"/>
         <typeAlias type="com.bit.cinema_manager.model.Theater" alias="theater"/>
-<!--        <typeAlias type="com.bit.cinema_manager.model.Rating" alias="rating"/>-->
-<!--        <typeAlias type="com.bit.cinema_manager.model.Screening" alias="screening"/>-->
+        <typeAlias type="com.bit.cinema_manager.model.Rating" alias="rating"/>
+        <typeAlias type="com.bit.cinema_manager.model.Screening" alias="screening"/>
     </typeAliases>
 </configuration>
