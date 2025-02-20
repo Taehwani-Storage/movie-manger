@@ -54,14 +54,6 @@ public class MovieService {
         sqlSession.update(NAMESPACE + ".updateMovie", movie);
     }
 
-    // 평점 수정
-    public void updateMovieScore(int movieId, int score) {
-        Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("id", movieId);
-        paramMap.put("score", score);
-        sqlSession.update(NAMESPACE + ".updateScore", paramMap);
-    }
-
     // 영화 삭제
     public void deleteMovie(int id) {
         sqlSession.delete(NAMESPACE + ".deleteMovie", id);

@@ -17,7 +17,6 @@ import java.util.Map;
 public class MovieController {
     private final MovieService MOVIE_SERVICE;
     private final UserService USER_SERVICE;
-    private final RatingService RATING_SERVICE;
     private final String LIST_FORMATTER = "yy-MM-dd HH:mm:ss";
 
     // 전체 영화 목록 조회
@@ -90,28 +89,6 @@ public class MovieController {
         return resultMap;
     }
 
-    // 영화 평점 수정
-    @PostMapping("/showOne/{id}/updateScore")
-    public Object updateMovieScore(@PathVariable int id, @RequestParam int score) {
-        Map<String, Object> resultMap = new HashMap<>();
-        try {
-            Movie movie = MOVIE_SERVICE.getOneMovie(id);
-            if (movie == null) {
-                resultMap.put("result", "fail");
-                resultMap.put("message", "Movie not found");
-            } else {
-                RATING_SERVICE.updateMovieScore(id, score);
-                movie.setRating(score);
-                resultMap.put("result", "success");
-                resultMap.put("movie", movie);
-            }
-        } catch (Exception e) {
-            resultMap.put("result", "fail");
-            resultMap.put("message", e.getMessage());
-        }
-
-        return resultMap;
-    }
 
     // 영화 등록
     @PostMapping("/add")

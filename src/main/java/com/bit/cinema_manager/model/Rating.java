@@ -5,8 +5,8 @@ import lombok.Data;
 @Data
 public class Rating {
     private int id;
-    private int ratingNo;
     private int movieId;
     private int userId;
+    private int score;
     private String review;
 }

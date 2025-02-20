@@ -1,6 +1,8 @@
 package com.bit.cinema_manager.controller;
 
+import com.bit.cinema_manager.model.Movie;
 import com.bit.cinema_manager.model.Rating;
+import com.bit.cinema_manager.service.MovieService;
 import com.bit.cinema_manager.service.RatingService;
 import com.bit.cinema_manager.service.UserService;
 import lombok.AllArgsConstructor;
@@ -15,10 +17,11 @@ import java.util.Map;
 @AllArgsConstructor
 public class RatingController {
     private final RatingService RATING_SERVICE;
+    private final MovieService MOVIE_SERVICE;
     private final UserService USER_SERVICE;
     private final String LIST_FORMATTER = "yy-MM-dd HH:mm:ss";
 
-    // 전체 극장 목록 조회
+    // 전체 평점 목록 조회
     @GetMapping("/showAll")
     public Object getAllRatingss() {
         Map<String, Object> resultMap = new HashMap<>();
@@ -27,7 +30,7 @@ public class RatingController {
         return resultMap;
     }
 
-    // 페이지별 극장 목록 조회
+    // 페이지별 평점 목록 조회
     @GetMapping("/showAll/{page}")
     public Object getRatingssByPage(@PathVariable String page) {
         Map<String, Object> resultMap = new HashMap<>();
@@ -71,7 +74,7 @@ public class RatingController {
         return resultMap;
     }
 
-    // 개별 극장 조회
+    // 개별 평점 조회
     @GetMapping("/showOne/{id}")
     public Object getOneRating(@PathVariable int id) {
         Map<String, Object> resultMap = new HashMap<>();
@@ -81,10 +84,39 @@ public class RatingController {
             resultMap.put("result", "fail");
             resultMap.put("message", "Rating not found");
         } else {
+            Movie movie = MOVIE_SERVICE.getOneMovie(rating.getMovieId());
+            if (movie != null) {
+                rating.setScore(movie.getRating());
+            }
             resultMap.put("result", "success");
             resultMap.put("rating", rating);
 
         }
+        return resultMap;
+    }
+
+    // 영화 평점 수정
+    @PostMapping("/update/{id}")
+    public Object updateScore(@PathVariable int id, @RequestBody Movie rating) {
+        Map<String, Object> resultMap = new HashMap<>();
+        try {
+            Movie movie = MOVIE_SERVICE.getOneMovie(id);
+            if (movie == null) {
+                resultMap.put("result", "fail");
+                resultMap.put("message", "Movie not found");
+            } else {
+                movie.setId(id);
+                rating.setId(id);
+                MOVIE_SERVICE.updateScore(rating);
+
+                resultMap.put("result", "success");
+                resultMap.put("movie", movie);
+            }
+        } catch (Exception e) {
+            resultMap.put("result", "fail");
+            resultMap.put("message", e.getMessage());
+        }
+
         return resultMap;
     }
 

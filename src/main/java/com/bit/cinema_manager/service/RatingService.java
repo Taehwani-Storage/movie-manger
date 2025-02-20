@@ -1,7 +1,8 @@
 package com.bit.cinema_manager.service;
 
+import com.bit.cinema_manager.model.Movie;
 import com.bit.cinema_manager.model.Rating;
-import com.bit.cinema_manager.model.Screening;
+import com.bit.cinema_manager.model.User;
 import lombok.AllArgsConstructor;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Service;
@@ -46,23 +47,23 @@ public class RatingService {
         return temp % SIZE == 0 ? temp / SIZE : (temp / SIZE) + 1;
     }
 
-
-    // 영화 평점 업데이트 (전체 사용자 평균값 반영)
-    public void updateMovieScore(int movieId, int score) {
-        Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("movieId", movieId);
-        paramMap.put("score", score);
-
-        sqlSession.update(NAMESPACE + ".updateMovieScore", paramMap);
+    // 평점 추가
+    public void addScore(Rating rating) {
+        sqlSession.insert(NAMESPACE + ".addScore", rating);
     }
 
-    // 사용자의 평론 추가 또는 수정
+    // 평론 추가
+    public void addReview(Rating rating) {
+        sqlSession.insert(NAMESPACE + ".updateReview", rating);
+    }
+
+    /*// 평점 수정
+    public void updateScroe(Rating rating) {
+        sqlSession.update(NAMESPACE + ".updateScore", rating);
+    }
+
     public void updateReview(Rating rating) {
-        /*Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("movieId", movieId);
-        paramMap.put("userId", userId);
-        paramMap.put("review", review);*/
         sqlSession.update(NAMESPACE + ".updateReview", rating);
-    }
+    }*/
 }
 
