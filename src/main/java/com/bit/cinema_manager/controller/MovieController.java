@@ -1,10 +1,13 @@
 package com.bit.cinema_manager.controller;
 
 import com.bit.cinema_manager.model.Movie;
+import com.bit.cinema_manager.model.User;
 import com.bit.cinema_manager.service.MovieService;
-import com.bit.cinema_manager.service.RatingService;
 import com.bit.cinema_manager.service.UserService;
+import com.bit.cinema_manager.util.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -17,6 +20,7 @@ import java.util.Map;
 public class MovieController {
     private final MovieService MOVIE_SERVICE;
     private final UserService USER_SERVICE;
+    private final JwtUtil JWT_UTIL;
     private final String LIST_FORMATTER = "yy-MM-dd HH:mm:ss";
 
     // 전체 영화 목록 조회
@@ -74,25 +78,36 @@ public class MovieController {
 
     // 개별 영화 조회
     @GetMapping("/showOne/{id}")
-    public Object getOneMovie(@PathVariable int id) {
+    public Object getOneMovie(@PathVariable String id, HttpServletRequest request) {
         Map<String, Object> resultMap = new HashMap<>();
         Movie movie = MOVIE_SERVICE.getOneMovie(id);
 
-        if (movie == null) {
+        if (!id.matches("^\\d+$") || movie == null) {
             resultMap.put("result", "fail");
             resultMap.put("message", "Movie not found");
         } else {
             resultMap.put("result", "success");
-            resultMap.put("movie", movie);
+            String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+            String token = authHeader.substring(7);
+            String username = JWT_UTIL.validateToken(token);
+            User user = USER_SERVICE.loadByUsername(username);
 
+            movie.setOwned(movie.getId() == user.getId());
+            resultMap.put("movie", movie);
         }
         return resultMap;
     }
 
     // 영화 등록
     @PostMapping("/addMoive")
-    public Object addMovie(@RequestBody Movie movie) {
+    public Object addMovie(@RequestBody Movie movie, HttpServletRequest request) {
         Map<String, Object> resultMap = new HashMap<>();
+        String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+
+        String token = authHeader.substring(7);
+        String username = JWT_UTIL.validateToken(token);
+        User user = USER_SERVICE.loadByUsername(username);
+        movie.setId(user.getId());
         try {
             MOVIE_SERVICE.addMovie(movie);
             resultMap.put("result", "success");

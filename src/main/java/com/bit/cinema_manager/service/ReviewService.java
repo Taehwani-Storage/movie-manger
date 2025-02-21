@@ -34,7 +34,7 @@ public class ReviewService {
     }
     
     // 평점 개별 조회
-    public Review getOneReview(int id) {
+    public Review getOneReview(String id) {
         return sqlSession.selectOne(NAMESPACE + ".getOneReview", id);
     }
 

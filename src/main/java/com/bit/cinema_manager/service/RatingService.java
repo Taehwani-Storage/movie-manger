@@ -38,7 +38,7 @@ public class RatingService {
     }
     
     // 평점 개별 조회
-    public Rating getOneRating(int id) {
+    public Rating getOneRating(String id) {
         return sqlSession.selectOne(NAMESPACE + ".getOneRating", id);
     }
 

@@ -1,9 +1,13 @@
 package com.bit.cinema_manager.controller;
 
 import com.bit.cinema_manager.model.Theater;
+import com.bit.cinema_manager.model.User;
 import com.bit.cinema_manager.service.TheaterService;
 import com.bit.cinema_manager.service.UserService;
+import com.bit.cinema_manager.util.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -16,6 +20,7 @@ import java.util.Map;
 public class TheaterController {
     private final TheaterService THEATER_SERVICE;
     private final UserService USER_SERVICE;
+    private final JwtUtil JWT_UTIL;
     private final String LIST_FORMATTER = "yy-MM-dd HH:mm:ss";
 
     // 전체 극장 목록 조회
@@ -73,15 +78,21 @@ public class TheaterController {
 
     // 개별 극장 조회
     @GetMapping("/showOne/{id}")
-    public Object getOneTheater(@PathVariable int id) {
+    public Object getOneTheater(@PathVariable String id, HttpServletRequest request) {
         Map<String, Object> resultMap = new HashMap<>();
         Theater theater = THEATER_SERVICE.getOneTheater(id);
 
-        if (theater == null) {
+        if (!id.matches("^\\d+$") || theater == null) {
             resultMap.put("result", "fail");
             resultMap.put("message", "Theater not found");
         } else {
             resultMap.put("result", "success");
+            String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+            String token = authHeader.substring(7);
+            String username = JWT_UTIL.validateToken(token);
+            User user = USER_SERVICE.loadByUsername(username);
+
+            theater.setOwned(theater.getId() == user.getId());
             resultMap.put("theater", theater);
 
         }
@@ -89,9 +100,14 @@ public class TheaterController {
     }
 
     // 극장 등록
-    @PostMapping("/add")
-    public Object addTheater(@RequestBody Theater theater) {
+    @PostMapping("/addTheater")
+    public Object addTheater(@RequestBody Theater theater, HttpServletRequest request) {
         Map<String, Object> resultMap = new HashMap<>();
+        String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String token = authHeader.substring(7);
+        String username = JWT_UTIL.validateToken(token);
+        User user = USER_SERVICE.loadByUsername(username);
+        theater.setId(user.getId());
         try {
             THEATER_SERVICE.addTheater(theater);
             resultMap.put("result", "success");

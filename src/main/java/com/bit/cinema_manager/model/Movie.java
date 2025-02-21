@@ -10,4 +10,5 @@ public class Movie {
     private String director;
     private String synopsis;
     private String runningTime;
+    private boolean isOwned;
 }

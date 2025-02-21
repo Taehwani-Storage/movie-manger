@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.sql.DataSource;
 
@@ -36,11 +37,9 @@ public class CinemaManagerApplication {
         return new SqlSessionTemplate(sessionFactory);
     }
 
-/*
     @Bean
     public BCryptPasswordEncoder BCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
-*/
 
 }

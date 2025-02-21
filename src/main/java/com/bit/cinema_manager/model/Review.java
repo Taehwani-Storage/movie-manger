@@ -9,4 +9,6 @@ public class Review {
     private int userId;
     private int score;
     private String comment;
+    private boolean isOwned;
+
 }

@@ -40,7 +40,7 @@ public class MovieService {
     }
 
     // 영화 개별 조회
-    public Movie getOneMovie(int id) {
+    public Movie getOneMovie(String id) {
         return sqlSession.selectOne(NAMESPACE + ".getOneMovie", id);
     }
 

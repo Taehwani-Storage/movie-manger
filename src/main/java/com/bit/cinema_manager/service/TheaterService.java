@@ -39,7 +39,7 @@ public class TheaterService {
     }
 
     // 극장 개별 조회
-    public Theater getOneTheater(int id) {
+    public Theater getOneTheater(String id) {
         return sqlSession.selectOne(NAMESPACE + ".getOneTheater", id);
     }
 

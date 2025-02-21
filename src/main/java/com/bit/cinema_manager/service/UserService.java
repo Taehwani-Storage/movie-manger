@@ -3,20 +3,19 @@ package com.bit.cinema_manager.service;
 import com.bit.cinema_manager.model.User;
 import lombok.AllArgsConstructor;
 import org.apache.ibatis.session.SqlSession;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 @AllArgsConstructor
 public class UserService {
     private final String NAMESPACE = "mappers.UserMapper";
     private final SqlSession sqlSession;
+    private final BCryptPasswordEncoder ENCODER;
 
     // 회원가입
     public void register(User user) {
-//        user.setPassword(ENCODER.encoder(user.getPassword()));
+        user.setPassword(ENCODER.encode(user.getPassword()));
         sqlSession.selectOne(NAMESPACE + ".register", user);
     }
 
@@ -47,11 +46,11 @@ public class UserService {
     }
 
     // 회원 등급 변경 (관리자)
-    public void updateRole(int userId, int role) {
+    /*public void updateRole(int userId, int role) {
         Map<String, Integer> paramMap = new HashMap<>();
         paramMap.put("userId", userId);
         paramMap.put("role", role);
         sqlSession.update(NAMESPACE + ".updateRole");
-    }
+    }*/
 
 }

@@ -9,4 +9,5 @@ public class Screening {
     private int movieNo;
     private int theaterNo;
     private String runningTime;
+    private boolean isOwned;
 }

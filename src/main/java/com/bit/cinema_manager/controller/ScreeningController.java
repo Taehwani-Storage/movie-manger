@@ -2,10 +2,14 @@ package com.bit.cinema_manager.controller;
 
 import com.bit.cinema_manager.model.Movie;
 import com.bit.cinema_manager.model.Screening;
+import com.bit.cinema_manager.model.User;
 import com.bit.cinema_manager.service.RatingService;
 import com.bit.cinema_manager.service.ScreeningService;
 import com.bit.cinema_manager.service.UserService;
+import com.bit.cinema_manager.util.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -18,7 +22,7 @@ import java.util.Map;
 public class ScreeningController {
     private final ScreeningService SCREENING_SERVICE;
     private final UserService USER_SERVICE;
-    private final RatingService RATING_SERVICE;
+    private final JwtUtil JWT_UTIL;
     private final String LIST_FORMATTER = "yy-MM-dd HH:mm:ss";
 
     // 전체 상영정보 목록 조회
@@ -76,16 +80,22 @@ public class ScreeningController {
 
     // 개별 상영정보 조회
     @GetMapping("/showOne/{id}")
-    public Object getOneScreening(@PathVariable int id) {
+    public Object getOneScreening(@PathVariable String id, HttpServletRequest request) {
         Map<String, Object> resultMap = new HashMap<>();
         Screening screening = SCREENING_SERVICE.getOneScreening(id);
 
-        if (screening == null) {
+        if (!id.matches("^\\d+$") || screening == null) {
             resultMap.put("result", "fail");
             resultMap.put("message", "Screening not found");
         } else {
             resultMap.put("result", "success");
-            resultMap.put("movie", screening);
+            String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+            String token = authHeader.substring(7);
+            String username = JWT_UTIL.validateToken(token);
+            User user = USER_SERVICE.loadByUsername(username);
+            screening.setOwned(screening.getId() == user.getId());
+
+            resultMap.put("screening", screening);
 
         }
         return resultMap;
@@ -93,8 +103,13 @@ public class ScreeningController {
 
     // 상영정보 등록
     @PostMapping("/addScreening")
-    public Object addScreening(@RequestBody Screening screening) {
+    public Object addScreening(@RequestBody Screening screening, HttpServletRequest request) {
         Map<String, Object> resultMap = new HashMap<>();
+        String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String token = authHeader.substring(7);
+        String username = JWT_UTIL.validateToken(token);
+        User user = USER_SERVICE.loadByUsername(username);
+        screening.setId(user.getId());
         try {
             SCREENING_SERVICE.addScreening(screening);
             resultMap.put("result", "success");

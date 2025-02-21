@@ -8,4 +8,6 @@ public class Rating {
     private int movieId;
     private int userId;
     private int score;
+    private boolean isOwned;
+
 }

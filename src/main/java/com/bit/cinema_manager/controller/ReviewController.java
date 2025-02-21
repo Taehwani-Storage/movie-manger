@@ -1,9 +1,13 @@
 package com.bit.cinema_manager.controller;
 
 import com.bit.cinema_manager.model.Review;
+import com.bit.cinema_manager.model.User;
 import com.bit.cinema_manager.service.ReviewService;
 import com.bit.cinema_manager.service.UserService;
+import com.bit.cinema_manager.util.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -16,11 +20,12 @@ import java.util.Map;
 public class ReviewController {
     private final ReviewService REVIEW_SERVICE;
     private final UserService USER_SERVICE;
+    private final JwtUtil JWT_UTIL;
     private final String LIST_FORMATTER = "yy-MM-dd HH:mm:ss";
 
     // 전체 평점 목록 조회
     @GetMapping("/showAll")
-    public Object getAllReviewss() {
+    public Object getAllReviews() {
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("list", REVIEW_SERVICE.getAllReviews());
         resultMap.put("total", REVIEW_SERVICE.countAll());
@@ -29,7 +34,7 @@ public class ReviewController {
 
     // 페이지별 평점 목록 조회
     @GetMapping("/showAll/{page}")
-    public Object getReviewssByPage(@PathVariable String page) {
+    public Object getReviewsByPage(@PathVariable String page) {
         Map<String, Object> resultMap = new HashMap<>();
         int pageNo;
         try {
@@ -73,30 +78,40 @@ public class ReviewController {
 
     // 개별 평점 조회
     @GetMapping("/showOne/{id}")
-    public Object getOnereview(@PathVariable int id) {
+    public Object getOneReview(@PathVariable String id, HttpServletRequest request) {
         Map<String, Object> resultMap = new HashMap<>();
         Review review = REVIEW_SERVICE.getOneReview(id);
 
-        if (review == null) {
+        if (!id.matches("^\\d+$") || review == null) {
             resultMap.put("result", "fail");
-            resultMap.put("message", "review not found");
+            resultMap.put("message", "Review not found");
         } else {
             resultMap.put("result", "success");
-            resultMap.put("review", review);
+            String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+            String token = authHeader.substring(7);
+            String username = JWT_UTIL.validateToken(token);
+            User user = USER_SERVICE.loadByUsername(username);
 
+            review.setOwned(review.getId() == user.getId());
+            resultMap.put("review", review);
         }
         return resultMap;
     }
 
     // 영화 평론 수정
     @PostMapping("/addReview")
-    public Object addReview(@RequestBody Review review) {
+    public Object addReview(@RequestBody Review review, HttpServletRequest request) {
         Map<String, Object> resultMap = new HashMap<>();
+        String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String token = authHeader.substring(7);
+        String username = JWT_UTIL.validateToken(token);
+        User user = USER_SERVICE.loadByUsername(username);
 
+        review.setId(user.getId());
         try {
             REVIEW_SERVICE.addReview(review);
-            resultMap.put("result", "succes");
-            resultMap.put("reviewa", review);
+            resultMap.put("result", "success");
+            resultMap.put("review", review);
         } catch (Exception e) {
             resultMap.put("result", "fail");
             resultMap.put("message", e.getMessage());

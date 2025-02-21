@@ -40,7 +40,7 @@ public class ScreeningService {
     }
 
     // 상영정보 개별 조회
-    public Screening getOneScreening(int id) {
+    public Screening getOneScreening(String id) {
         return sqlSession.selectOne(NAMESPACE + ".getOneScreening", id);
     }
 
