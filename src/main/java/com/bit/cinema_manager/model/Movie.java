@@ -9,8 +9,5 @@ public class Movie {
     private String title;
     private String director;
     private String synopsis;
-/*
-    private int rating;
-*/
     private String runningTime;
 }

@@ -46,7 +46,7 @@ public class ScreeningController {
         List<Screening> list = SCREENING_SERVICE.selectByPage(pageNo);
         if (list.isEmpty()) {
             resultMap.put("result", "fail");
-            resultMap.put("message", "No movies found");
+            resultMap.put("message", "No Screening found");
         } else {
             resultMap.put("result", "success");
             resultMap.put("list", list);
@@ -92,7 +92,7 @@ public class ScreeningController {
     }
 
     // 상영정보 등록
-    @PostMapping("/add")
+    @PostMapping("/addScreening")
     public Object addScreening(@RequestBody Screening screening) {
         Map<String, Object> resultMap = new HashMap<>();
         try {

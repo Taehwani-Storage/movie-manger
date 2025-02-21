@@ -6,27 +6,20 @@
 <mapper namespace="mappers.RatingMapper">
     <!-- 평점 목록 페이지 조회 -->
     <select id="selectByPage" resultType="rating">
-        SELECT * FROM movie.ratings r
-            JOIN movie.users u ON r.user_id = u.id
-            JOIN movie.movies m ON r.movie_id = m.id
-        ORDER BY r.id DESC
+        SELECT * FROM movie.ratings
+        ORDER BY id DESC
             LIMIT #{limitSize}
         OFFSET #{startRow};
     </select>
 
     <!-- 전체 평점 조회 -->
     <select id="getAllRatings" resultType="rating">
-        SELECT * FROM movie.ratings r
-            JOIN movie.users u ON r.user_id = u.id
-            JOIN movie.movies m ON r.movie_id = m.id;
+        SELECT * FROM movie.ratings;
     </select>
 
     <!-- 개별 평점 조회 -->
     <select id="getOneRating" parameterType="int" resultType="rating">
-        SELECT * FROM movie.ratings r
-            JOIN movie.users u ON r.user_id = u.id
-            JOIN movie.movies m ON r.movie_id = m.id
-        WHERE r.id = #{id};
+        SELECT * FROM movie.ratings WHERE id = #{id};
     </select>
 
     <!-- 평점 개수 카운트 -->
@@ -34,16 +27,10 @@
         SELECT COUNT(*) FROM movie.ratings;
     </select>
 
-    <!-- 영화 평점 업데이트 (입력된 모든 평점의 평균값 반영) -->
-    <insert id="insertScore" parameterType="rating">
-        INSERT INTO movie.ratings (movie_id, user_id, r)
+    <!-- 영화 평점 추가 및 수정 -->
+    <insert id="addScore" parameterType="rating">
+        INSERT INTO movie.ratings (movie_id, user_id, score)
+        VALUES (#{movieId}, #{userId}, #{score});
     </insert>
 
-    <!-- 사용자의 평론 추가 또는 수정 -->
-    <update id="updateReview" parameterType="rating">
-        INSERT INTO movie.ratings (movie_id, user_id, score, review)
-        VALUES (#{userId}, #{movieId}, #{score}, #{review})
-            ON CONFLICT (user_id, movie_id) DO UPDATE SET score = #{score} OR review = #{review};
-
-    </update>
 </mapper>

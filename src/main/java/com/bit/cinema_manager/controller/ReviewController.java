@@ -1,10 +1,7 @@
 package com.bit.cinema_manager.controller;
 
-import com.bit.cinema_manager.model.Movie;
-import com.bit.cinema_manager.model.Rating;
 import com.bit.cinema_manager.model.Review;
-import com.bit.cinema_manager.service.MovieService;
-import com.bit.cinema_manager.service.RatingService;
+import com.bit.cinema_manager.service.ReviewService;
 import com.bit.cinema_manager.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -14,26 +11,25 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/rating")
+@RequestMapping("/api/review")
 @AllArgsConstructor
-public class RatingController {
-    private final RatingService RATING_SERVICE;
-    private final MovieService MOVIE_SERVICE;
+public class ReviewController {
+    private final ReviewService REVIEW_SERVICE;
     private final UserService USER_SERVICE;
     private final String LIST_FORMATTER = "yy-MM-dd HH:mm:ss";
 
     // 전체 평점 목록 조회
     @GetMapping("/showAll")
-    public Object getAllRatingss() {
+    public Object getAllReviewss() {
         Map<String, Object> resultMap = new HashMap<>();
-        resultMap.put("list", RATING_SERVICE.getAllRatings());
-        resultMap.put("total", RATING_SERVICE.countAll());
+        resultMap.put("list", REVIEW_SERVICE.getAllReviews());
+        resultMap.put("total", REVIEW_SERVICE.countAll());
         return resultMap;
     }
 
     // 페이지별 평점 목록 조회
     @GetMapping("/showAll/{page}")
-    public Object getRatingssByPage(@PathVariable String page) {
+    public Object getReviewssByPage(@PathVariable String page) {
         Map<String, Object> resultMap = new HashMap<>();
         int pageNo;
         try {
@@ -44,15 +40,15 @@ public class RatingController {
             return resultMap;
         }
 
-        List<Rating> list = RATING_SERVICE.selectByPage(pageNo);
+        List<Review> list = REVIEW_SERVICE.selectByPage(pageNo);
         if (list.isEmpty()) {
             resultMap.put("result", "fail");
-            resultMap.put("message", "No Ratings found");
+            resultMap.put("message", "No Reviews found");
         } else {
             resultMap.put("result", "success");
             resultMap.put("list", list);
 
-            int maxPage = RATING_SERVICE.selectMaxPage();
+            int maxPage = REVIEW_SERVICE.selectMaxPage();
             int startPage = pageNo - 2;
             int endPage = pageNo + 2;
 
@@ -77,45 +73,30 @@ public class RatingController {
 
     // 개별 평점 조회
     @GetMapping("/showOne/{id}")
-    public Object getOneRating(@PathVariable int id) {
+    public Object getOnereview(@PathVariable int id) {
         Map<String, Object> resultMap = new HashMap<>();
-        Rating rating = RATING_SERVICE.getOneRating(id);
+        Review review = REVIEW_SERVICE.getOneReview(id);
 
-        if (rating == null) {
+        if (review == null) {
             resultMap.put("result", "fail");
-            resultMap.put("message", "Rating not found");
+            resultMap.put("message", "review not found");
         } else {
             resultMap.put("result", "success");
-            resultMap.put("rating", rating);
+            resultMap.put("review", review);
 
         }
         return resultMap;
     }
 
-    // 영화 평점 수정
-    @PostMapping("/addScore")
-    public Object addScore(@RequestBody Rating rating) {
-        Map<String, Object> resultMap = new HashMap<>();
-        try {
-            RATING_SERVICE.addScore(rating);
-            resultMap.put("result", "succcess");
-            resultMap.put("rating", rating);
-        } catch (Exception e) {
-            resultMap.put("result", "fail");
-            resultMap.put("message", e.getMessage());
-        }
-
-        return resultMap;
-    }
-
+    // 영화 평론 수정
     @PostMapping("/addReview")
     public Object addReview(@RequestBody Review review) {
         Map<String, Object> resultMap = new HashMap<>();
 
         try {
-            RATING_SERVICE.addReview(review);
+            REVIEW_SERVICE.addReview(review);
             resultMap.put("result", "succes");
-            resultMap.put("Rating", review);
+            resultMap.put("reviewa", review);
         } catch (Exception e) {
             resultMap.put("result", "fail");
             resultMap.put("message", e.getMessage());

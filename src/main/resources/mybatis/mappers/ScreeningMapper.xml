@@ -6,7 +6,8 @@
 
     <!-- 극장 목록 페이지 조회 -->
     <select id="selectByPage" resultType="screening">
-        SELECT * FROM movie.screenings
+        SELECT *
+        FROM movie.screenings
         ORDER BY id DESC
             LIMIT #{limitSize}
         OFFSET #{startRow};
@@ -14,37 +15,44 @@
 
     <!-- 전체 극장 조회 -->
     <select id="getAllScreenings" resultType="screening">
-        SELECT * FROM movie.screenings;
+        SELECT *
+        FROM movie.screenings;
     </select>
 
     <!-- 개별 극장 조회 -->
     <select id="getOneScreening" parameterType="int" resultType="screening">
-        SELECT * FROM movie.screenings WHERE id = #{id};
+        SELECT *
+        FROM movie.screenings
+        WHERE id = #{id};
     </select>
 
     <!-- 극장 개수 카운트 -->
     <select id="selectMaxPage" resultType="int">
-        SELECT COUNT(*) FROM movie.screenings;
+        SELECT COUNT(*)
+        FROM movie.screenings;
     </select>
 
-<!--    &lt;!&ndash; 극장 등록 &ndash;&gt;-->
-<!--    <insert id="addScreening" parameterType="screening">-->
-<!--        INSERT INTO movie.screenings (name, address, phone)-->
-<!--        VALUES (#{name}, #{address}, #{phone});-->
-<!--    </insert>-->
+    <!-- 극장 등록 -->
+    <insert id="addScreening" parameterType="screening">
+        INSERT INTO movie.screenings (screening_no, movie_no, theater_no, running_time)
+        VALUES (#{screeningNo}, #{movieNo}, #{theaterNo}, #{runningTime});
+    </insert>
 
-<!--    &lt;!&ndash; 극장 수정 &ndash;&gt;-->
-<!--    <update id="updateScreening" parameterType="screening">-->
-<!--        UPDATE movie.screenings-->
-<!--        SET name      = #{name},-->
-<!--            address   = #{address},-->
-<!--            phone     = #{phone}-->
-<!--        WHERE id = #{id};-->
-<!--    </update>-->
+    <!-- 극장 수정 -->
+    <update id="updateScreening" parameterType="screening">
+        UPDATE movie.screenings
+        SET screening_no = #{screeningNo},
+            movie_no     = #{movieNo},
+            theater_no   = #{theaterNo},
+            running_time = #{runningTime}
+        WHERE id = #{id};
+    </update>
 
     <!-- 극장 삭제 -->
     <delete id="deleteScreening" parameterType="int">
-        DELETE FROM movie.screenings WHERE id = #{id};
+        DELETE
+        FROM movie.screenings
+        WHERE id = #{id};
     </delete>
 
 </mapper>

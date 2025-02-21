@@ -6,7 +6,7 @@ import lombok.Data;
 public class Screening {
     private int id;
     private int screeningNo;
-    private Movie movie;
-    private Theater theater;
+    private int movieNo;
+    private int theaterNo;
     private String runningTime;
 }

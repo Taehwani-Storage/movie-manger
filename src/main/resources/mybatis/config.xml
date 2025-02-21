@@ -14,5 +14,6 @@
         <typeAlias type="com.bit.cinema_manager.model.Theater" alias="theater"/>
         <typeAlias type="com.bit.cinema_manager.model.Rating" alias="rating"/>
         <typeAlias type="com.bit.cinema_manager.model.Screening" alias="screening"/>
+        <typeAlias type="com.bit.cinema_manager.model.Review" alias="review"/>
     </typeAliases>
 </configuration>

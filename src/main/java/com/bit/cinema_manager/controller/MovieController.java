@@ -89,9 +89,8 @@ public class MovieController {
         return resultMap;
     }
 
-
     // 영화 등록
-    @PostMapping("/add")
+    @PostMapping("/addMoive")
     public Object addMovie(@RequestBody Movie movie) {
         Map<String, Object> resultMap = new HashMap<>();
         try {
