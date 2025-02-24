@@ -18,8 +18,8 @@
     </select>
 
     <!-- 개별 평점 조회 -->
-    <select id="getOneRating" parameterType="int" resultType="rating">
-        SELECT * FROM movie.ratings WHERE id = #{id};
+    <select id="getOneRating" parameterType="string" resultType="rating">
+        SELECT * FROM movie.ratings WHERE id = #{id}::INTEGER;
     </select>
 
     <!-- 평점 개수 카운트 -->

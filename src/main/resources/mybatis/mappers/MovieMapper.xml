@@ -18,8 +18,8 @@
     </select>
 
     <!-- 개별 영화 조회 -->
-    <select id="getOneMovie" parameterType="int" resultType="movie">
-        SELECT * FROM movie.movies WHERE id = #{id};
+    <select id="getOneMovie" parameterType="string" resultType="movie">
+        SELECT * FROM movie.movies WHERE id = #{id}::INTEGER;
     </select>
 
     <!-- 영화 개수 카운트 -->

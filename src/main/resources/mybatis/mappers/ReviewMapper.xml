@@ -18,8 +18,8 @@
     </select>
 
     <!-- 개별 평론 조회 -->
-    <select id="getOneReview" parameterType="int" resultType="review">
-        SELECT * FROM movie.reviews WHERE id = #{id};
+    <select id="getOneReview" parameterType="string" resultType="review">
+        SELECT * FROM movie.reviews WHERE id = #{id}::INTEGER;
     </select>
 
     <!-- 평론 개수 카운트 -->

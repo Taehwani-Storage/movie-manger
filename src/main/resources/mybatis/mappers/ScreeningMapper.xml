@@ -20,10 +20,10 @@
     </select>
 
     <!-- 개별 극장 조회 -->
-    <select id="getOneScreening" parameterType="int" resultType="screening">
+    <select id="getOneScreening" parameterType="string" resultType="screening">
         SELECT *
         FROM movie.screenings
-        WHERE id = #{id};
+        WHERE id = #{id}::INTEGER;
     </select>
 
     <!-- 극장 개수 카운트 -->

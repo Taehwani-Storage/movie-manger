@@ -18,8 +18,8 @@
     </select>
 
     <!-- 개별 극장 조회 -->
-    <select id="getOneTheater" parameterType="int" resultType="theater">
-        SELECT * FROM movie.theaters WHERE id = #{id};
+    <select id="getOneTheater" parameterType="string" resultType="theater">
+        SELECT * FROM movie.theaters WHERE id = #{id}::INTEGER;
     </select>
 
     <!-- 극장 개수 카운트 -->
