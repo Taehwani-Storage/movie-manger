@@ -13,7 +13,7 @@ import java.util.Map;
 public class MovieService {
     private final String NAMESPACE = "mappers.MovieMapper";
     private final SqlSession sqlSession;
-    private final int SIZE = 5;
+    private final int SIZE = 10;
 
     // 페이지에 따른 영화 목록 불러오기
     public List<Movie> selectByPage(int page) {

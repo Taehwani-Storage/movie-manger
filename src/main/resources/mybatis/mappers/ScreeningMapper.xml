@@ -34,17 +34,14 @@
 
     <!-- 극장 등록 -->
     <insert id="addScreening" parameterType="screening">
-        INSERT INTO movie.screenings (screening_no, movie_no, theater_no, running_time)
-        VALUES (#{screeningNo}, #{movieNo}, #{theaterNo}, #{runningTime});
+        INSERT INTO movie.screenings (screening_no)
+        VALUES (#{screeningNo});
     </insert>
 
     <!-- 극장 수정 -->
     <update id="updateScreening" parameterType="screening">
         UPDATE movie.screenings
         SET screening_no = #{screeningNo},
-            movie_no     = #{movieNo},
-            theater_no   = #{theaterNo},
-            running_time = #{runningTime}
         WHERE id = #{id};
     </update>
 
