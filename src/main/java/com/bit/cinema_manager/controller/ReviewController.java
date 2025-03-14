@@ -17,6 +17,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/review")
 @AllArgsConstructor
+@CrossOrigin("http://localhost:3001")
 public class ReviewController {
     private final ReviewService REVIEW_SERVICE;
     private final UserService USER_SERVICE;

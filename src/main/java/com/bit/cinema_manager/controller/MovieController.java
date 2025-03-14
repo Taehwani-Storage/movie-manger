@@ -17,6 +17,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/movie")
 @AllArgsConstructor
+@CrossOrigin("http://localhost:3001")
 public class MovieController {
     private final MovieService MOVIE_SERVICE;
     private final UserService USER_SERVICE;
@@ -77,12 +78,12 @@ public class MovieController {
     }
 
     // 개별 영화 조회
-    @GetMapping("/showOne/{id}")
-    public Object getOneMovie(@PathVariable String id, HttpServletRequest request) {
+    @GetMapping("/showOne/{movieNo}")
+    public Object getOneMovie(@PathVariable String movieNo, HttpServletRequest request) {
         Map<String, Object> resultMap = new HashMap<>();
-        Movie movie = MOVIE_SERVICE.getOneMovie(id);
+        Movie movie = MOVIE_SERVICE.getOneMovie(movieNo);
 
-        if (!id.matches("^\\d+$") || movie == null) {
+        if (!movieNo.matches("^\\d+$") || movie == null) {
             resultMap.put("result", "fail");
             resultMap.put("message", "Movie not found");
         } else {
@@ -92,7 +93,7 @@ public class MovieController {
             String username = JWT_UTIL.validateToken(token);
             User user = USER_SERVICE.loadByUsername(username);
 
-            movie.setOwned(movie.getId() == user.getId());
+            movie.setOwned(movie.getMovieNo() == user.getUserNo());
             resultMap.put("movie", movie);
         }
         return resultMap;

@@ -13,6 +13,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/user")
 @AllArgsConstructor
+@CrossOrigin("http://localhost:3001")
 public class UserController {
     private final UserService USER_SERVICE;
     private final JwtUtil JWT_UTIL;

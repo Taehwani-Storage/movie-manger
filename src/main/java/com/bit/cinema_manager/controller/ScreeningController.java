@@ -19,6 +19,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/screening")
 @AllArgsConstructor
+@CrossOrigin("http://localhost:3001")
 public class ScreeningController {
     private final ScreeningService SCREENING_SERVICE;
     private final UserService USER_SERVICE;

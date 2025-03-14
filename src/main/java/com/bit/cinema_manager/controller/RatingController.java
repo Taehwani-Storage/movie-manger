@@ -20,6 +20,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/rating")
 @AllArgsConstructor
+@CrossOrigin("http://localhost:3001")
 public class RatingController {
     private final RatingService RATING_SERVICE;
     private final UserService USER_SERVICE;

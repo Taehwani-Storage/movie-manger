@@ -17,6 +17,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/theater")
 @AllArgsConstructor
+@CrossOrigin("http://localhost:3001")
 public class TheaterController {
     private final TheaterService THEATER_SERVICE;
     private final UserService USER_SERVICE;
